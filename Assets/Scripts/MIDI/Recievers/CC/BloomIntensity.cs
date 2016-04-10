@@ -3,10 +3,11 @@ using UnityStandardAssets.ImageEffects;
 
 public class BloomIntensity : MidiCcRecieverBase
 {
-    public Bloom bloom;
+    //public Bloom bloom;
+    public BloomOptimized bloom;
    
     public override void ccResponseHandler (MidiCCSource data) {
-        bloom.bloomIntensity = data.value * 3;
+        bloom.intensity = data.value * 3;
     }
 }
 
