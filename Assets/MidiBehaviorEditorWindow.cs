@@ -10,8 +10,10 @@ public class MidiBehaviorEditor : EditorWindow {
     MidiManager manager;
     List<MidiCcRecieverBase> midiCcListeners;
 
-    int[] componentIndexes = new int[40];
-    int[] objectIndexes = new int[40];
+    int[] componentIndexes = new int[100];
+    int[] objectIndexes = new int[100];
+    int[] propertyIndexes = new int[100];
+    int[] subPropertyIndexes = new int[100];
 
 
     [MenuItem("Window/Midi Behavior Editor")]
@@ -30,7 +32,7 @@ public class MidiBehaviorEditor : EditorWindow {
             GameObject.FindGameObjectsWithTag("Midi Reactive")
                 .SelectMany(g => g.GetComponents<MidiCcRecieverBase>()).ToList();
 
-        Debug.Log(midiCcListeners.Count);
+        Debug.Log("reciever count:" + midiCcListeners.Count);
     }
 
     void displayBehavior (MidiCcRecieverBase behavior, int index) {
@@ -38,6 +40,7 @@ public class MidiBehaviorEditor : EditorWindow {
         Component[] componentArray = null;
         Component selectedComponent = null;
         GameObject selectedObject = behavior.gameObject;
+
         
         selectedObject = (GameObject)EditorGUILayout.ObjectField(selectedObject, typeof(GameObject), true);
 
@@ -51,14 +54,12 @@ public class MidiBehaviorEditor : EditorWindow {
                 selectedComponent = componentArray[componentIndexes[index]];
 
                 var props = selectedComponent.GetType().GetProperties()
-                            .Where(prop => prop.PropertyType.ToString() != "UnityEngine.Component")
-                            .Select(p => p.ToString()).ToArray();
+                                .Where(prop => prop.PropertyType.ToString() != "UnityEngine.Component")
+                                .Select(p => p).ToArray();
 
-                /*foreach (var p in props) {
-                    Debug.Log(p);
-                }*/
+                var propLabels = props.Select(p => p.ToString()).ToArray();
 
-                EditorGUILayout.Popup(0, props);
+                propertyIndexes[index] = EditorGUILayout.Popup(propertyIndexes[index], propLabels);
             }
         }
 
